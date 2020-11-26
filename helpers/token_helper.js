@@ -37,7 +37,6 @@ const SignedRefreshToken = function (userID) {
 };
 
 const verifyToken = function (req, res, next) {
-    console.log(req.headers.authorization);
 
     const auth_token = req.headers.authorization;
 

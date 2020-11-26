@@ -5,7 +5,7 @@ const router = express.Router();
 const createError = require('http-errors');
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
-const { AuthSchema } = require('../helpers/validation_Schema');
+const { AuthSchema, LoginAuthSchema } = require('../helpers/validation_Schema');
 const { NewRegisteredToken, SignedRefreshToken, verifyRefreshToken } = require('../helpers/token_helper');
 
 
@@ -25,7 +25,7 @@ router.post("/register", async (req, res, next) => {
             await bcrypt.hash(validationResults.password, 10).then(async function (hash) {
                 if (hash) {
                     if (results.length >= 1) throw createError.Conflict(`${validationResults.email} already exist`);
-                    const user = new User({ email: validationResults.email, password: hash });
+                    const user = new User({ first_name: validationResults.first_name, last_name: validationResults.last_name, email: validationResults.email, password: hash });
 
                     await user.save().then(async (userInformation) => {
                         const newToken = await NewRegisteredToken(userInformation.id);
@@ -33,6 +33,8 @@ router.post("/register", async (req, res, next) => {
                         res.status(200).json({
                             id: userInformation.id,
                             email: userInformation.email,
+                            first_name: userInformation.first_name,
+                            last_Name: userInformation.last_name,
                             tokens: {
                                 accessToken: newToken,
                                 refreshToken: refreshToken
@@ -55,7 +57,8 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async function (req, res, next) {
     try {
-        const validationResults = await AuthSchema.validateAsync(req.body);
+        const validationResults = await LoginAuthSchema.validateAsync(req.body);
+        console.log(validationResults + "eklb.nwkjeb");
         await User.findOne({ email: validationResults.email }).then(async function (foundUser) {
             if (!foundUser) throw createError.NotFound('User not registered');
             await bcrypt.compare(validationResults.password, foundUser.password).then(async function (result) {
@@ -65,6 +68,9 @@ router.post("/login", async function (req, res, next) {
                 res.status(200).json({
                     id: foundUser.id,
                     email: foundUser.email,
+                    first_name: foundUser.first_name,
+                    last_Name: foundUser.last_name,
+                    courses_enrolled: foundUser.courses_enrolled,
                     tokens: {
                         accessToken: newToken,
                         refreshToken: refreshToken
