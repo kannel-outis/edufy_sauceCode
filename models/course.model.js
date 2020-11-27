@@ -23,6 +23,12 @@ const CourseSchema = new mongoose.Schema({
     date_added: {
         type: Date
     },
+    resources: [
+        {
+            fileName: String,
+            link_to_resources: String,
+        }
+    ],
     added_by: {
         type: String
     }

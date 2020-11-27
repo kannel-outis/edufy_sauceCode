@@ -20,6 +20,8 @@ const CourseSchema = joi.object({
     duration: joi.string(),
     description: joi.string().required(),
     instructors: joi.array().required(),
+    resources: joi.array(),
+    added_by: joi.string()
     // date_added: joi.date().required(),
 });
 
