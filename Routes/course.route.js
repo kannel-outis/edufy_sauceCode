@@ -15,6 +15,9 @@ router
     .route('/courses/:courseID')
     .get(verifyToken, getAParticularCourse)
     .delete(verifyToken, deleteAParticularCourse);
+
+
+// number off students enrolled
 module.exports = router;
 
 

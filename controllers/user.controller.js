@@ -1,6 +1,7 @@
 
 // jshint esversion: 6
 // jshint esversion: 8
+const { NotFound } = require('http-errors');
 const createError = require('http-errors');
 const User = require('../models/user.model');
 
@@ -61,20 +62,36 @@ module.exports = {
         }
     },
     userIDUpdateMyCourses: async function (req, res, next) {
-        //    courses_enrolled: { $concatArrays: [req.body.courses_enrolled, `${result.courses_enrolled}`] } ; 
         const { userID } = req.params;
+        const newArray = [];
         try {
             await User.findById(userID).then(async (result) => {
-                if (req.payload.userID === result.id) {
-
-                    await User.findByIdAndUpdate(userID, { $push: { courses_enrolled: [req.body.courses_enrolled] } }).then((results) => {
-                        if (results) res.status(200).json({
-                            results
+                if (result) {
+                    if (req.payload.userID === result.id) {
+                        for (var i = 0; i < req.body.courses_enrolled.length; i++) {
+                            if (!result.courses_enrolled.includes(req.body.courses_enrolled[i])) {
+                                console.log("true true");
+                                newArray.push(req.body.courses_enrolled[i]);
+                            } else {
+                                console.log('true true');
+                            }
+                        }
+                        await User.findByIdAndUpdate(userID, { $push: { courses_enrolled: newArray } }).then((results) => {
+                            if (results) {
+                                res.status(200).json({
+                                    message: 'updated successfully.'
+                                });
+                            } else {
+                                throw new Error('Something Went wrong');
+                            }
                         });
-                        throw new Error('Something Went wrong');
-                    });
+
+
+                    } else {
+                        throw createError.Unauthorized();
+                    }
                 } else {
-                    throw createError.Unauthorized();
+                    throw NotFound('User Not found');
                 }
             });
         } catch (error) {
@@ -118,3 +135,21 @@ module.exports = {
         }
     }
 };
+
+
+
+
+// if (result.courses_enrolled.includes(req.body.courses_enrolled)) {
+//     res.send('includes');
+// } else {
+//     res.send({
+//         message: "course already added"
+//     });
+// }
+
+
+
+
+
+
+
