@@ -1,8 +1,8 @@
 
 # EDUFY Team Delivr Sauce Code
 
-    An online platform where students are being prepared for related Courses according to their field of Study. 
-    This api was built with nodeJs
+  An online platform where students are being prepared for related Courses according to their field of Study. 
+  This api was built with nodeJs
 
 this is the base url [https://gentle-crag-93709.herokuapp.com](https://gentle-crag-93709.herokuapp.com)
  
