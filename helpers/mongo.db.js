@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 
 // mongoose.Promise = global.Promise;
 const mongoPort = process.env.MONGO_URI_HOST_PORT;
-
-mongoose.connect(mongoPort || 'mongodb://localhost:27017/Delivr', {
+// mongoPort || 
+mongoose.connect('mongodb://localhost:27017/Delivr', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
